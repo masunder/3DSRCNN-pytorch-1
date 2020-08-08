@@ -17,7 +17,7 @@ parser.add_argument("--batchSize", type=int, default=64, help="Training batch si
 parser.add_argument("--nEpochs", type=int, default=100, help="Number of epochs to train for")
 parser.add_argument("--lr", type=float, default=0.1, help="Learning Rate. Default=0.1")
 parser.add_argument("--step", type=int, default=10, help="Sets the learning rate to the initial LR decayed by momentum every n epochs, Default: n=10")
-parser.add_argument("--cuda", type=int,default=1, help="Use cuda?")
+parser.add_argument("--cuda", type=int,default=0, help="Use cuda?")
 parser.add_argument("--resume", default="", type=str, help="Path to checkpoint (default: none)")
 parser.add_argument("--start-epoch", default=1, type=int, help="Manual epoch number (useful on restarts)")
 parser.add_argument("--clip", type=float, default=0.4, help="Clipping Gradients. Default=0.4")
@@ -25,7 +25,7 @@ parser.add_argument("--threads", type=int, default=1, help="Number of threads fo
 parser.add_argument("--momentum", default=0.9, type=float, help="Momentum, Default: 0.9")
 parser.add_argument("--weight-decay", "--wd", default=1e-4, type=float, help="Weight decay, Default: 1e-4")
 parser.add_argument('--pretrained', default='', type=str, help='path to pretrained model (default: none)')
-parser.add_argument('--train_path',type=str,default="train_data/3dtrain25all.h5",help='Path to train dataset')
+parser.add_argument('--train_path',type=str,default="train_data/3dtrain.h5",help='Path to train dataset')
 parser.add_argument('--memo', default= 'L_', type=str, help='prefix of logger ')
 def main():
     global opt, model
@@ -49,7 +49,7 @@ def main():
     training_data_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=True)
 
     print("===> Building model")
-    model = Net()
+    model = Net(3)
     ################Loss function!!!!!!!!
     # criterion = nn.MSELoss(size_average=True)
     criterion = nn.SmoothL1Loss()
