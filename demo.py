@@ -1,6 +1,5 @@
 import torch
 from torch.autograd import Variable
-from scipy.ndimage import imread
 import numpy as np
 import time, math
 import matplotlib.pyplot as plt
@@ -42,13 +41,13 @@ CUDA_ENABLE = 0
 #if CUDA_ENABLE and not torch.cuda.is_available():
 #    raise Exception("No GPU found, please run without --cuda")
 
-model_path="model/model_epoch_10.pth"#current filepath 
+model_path="model/0809-1245L__model/model_epoch_2.pkl"#current filepath
 model = torch.load(model_path)['model']
 model=model.cpu()
 params=model.state_dict()
 #for item in params:
 #    print (item)
-print(params['module.residual_layer.0.conv.weight'])
+# print(params['module.residual_layer.0.conv.weight'])
 
 if CUDA_ENABLE:
     model = model.cuda()
@@ -70,17 +69,17 @@ def read_imagecollection(file_path):
     return imgs_arrayset
     
 
-dataset_interp=read_imagecollection('/home/wdd/桌面/testset/interp/*.bmp')
+dataset_interp=read_imagecollection('images/LR/*.bmp')
 dataset_interp=dataset_interp/255#normlize the gray rank to 0-1
-dataset_interp=dataset_interp[:400,:400,:400]
+dataset_interp=dataset_interp[:40,:2580,:2580]
 
 
 num,h,w=dataset_interp.shape
-batch_generate_size=100
+batch_generate_size=20
 reconstruction_output=np.zeros((num,h,w))
-for count_d in range((num//batch_generate_size)+1):
-    for count_h in range((h//batch_generate_size)+1):
-        for count_w in range((w//batch_generate_size)+1):
+for count_d in range((num//batch_generate_size)):
+    for count_h in range((h//batch_generate_size)):
+        for count_w in range((w//batch_generate_size)):
             pixel_start_d=count_d*batch_generate_size
             pixel_end_d=(count_d+1)*batch_generate_size
             pixel_start_h=count_h*batch_generate_size
@@ -109,9 +108,9 @@ for count_d in range((num//batch_generate_size)+1):
             reconstruction_output[pixel_start_d:pixel_end_d,pixel_start_h:pixel_end_h,pixel_start_w:pixel_end_w]=output#
             del testdata_variable
             
-dataset_ori=read_imagecollection('/home/wdd/桌面/testset/ori1/*.bmp')
+dataset_ori=read_imagecollection('images/HR/*.bmp')
 dataset_interp=dataset_interp*255
-print ('PSNR of interp:',PSNR(dataset_interp,dataset_ori[:400,:400,:400]))
-print ('PSNR of reconstructor:',PSNR(reconstruction_output,dataset_ori[:400,:400,:400]))
+print ('PSNR of interp:',PSNR(dataset_interp,dataset_ori[:40,:2580,:2580]))
+print ('PSNR of reconstructor:',PSNR(reconstruction_output,dataset_ori[:40,:2580,:2580]))
 generate_2Dimage(reconstruction_output)
 
