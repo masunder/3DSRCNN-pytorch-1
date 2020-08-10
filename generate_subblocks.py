@@ -13,11 +13,14 @@ parser = argparse.ArgumentParser(description="PyTorch VDSR")
 parser.add_argument("--countd", type=int, default=0, help="d_size")
 parser.add_argument("--counth", type=int, default=0, help="h_size")
 parser.add_argument("--countw", type=int, default=0, help="w_size")
-parser.add_argument('--interpath',type=str,default='saved_crop_imgs_1_low',help='path to interpolation images' )
+parser.add_argument("--dep", type=int, default=40, help="d")
+parser.add_argument("--hei", type=int, default=2580, help="h")
+parser.add_argument("--wid", type=int, default=2580, help="w")
+parser.add_argument('--interpath',type=str,default='images/LR/', help='path to interpolation images' )
 parser.add_argument('--crop',type=int,default=0,help='pre-processing')
-parser.add_argument('--block_size',type=int,default=50,help='reconstrucion size per time')
-parser.add_argument('--model',type=str,default="model_12layers_25input_3kernel_multi/model_epoch_40.pkl",help='path to trained model')
-parser.add_argument('--cuda',type=int,default=1)
+parser.add_argument('--block_size',type=int,default=50, help='reconstrucion size per time')
+parser.add_argument('--model',type=str,default="model/0809-1245L__model/model_epoch_2.pkl", help='path to trained model')
+parser.add_argument('--cuda',type=int,default=0)
 parser.add_argument('--format', type=str, default='bmp', help="specified images format")
 opt=parser.parse_args()
 
@@ -51,10 +54,10 @@ if PRE_CROP:
     dataset_interp=utils.pre_crop(dataset_interp)
 #print('===>Load input low resolution image from : ',image_path)
 dataset_interp = dataset_interp/255.0#normlize the gray rank to 0-1
-dataset_interp = dataset_interp[:400,:400,:400]
+dataset_interp = dataset_interp[:opt.wid,:opt.hei,:opt.dep]
 
 num,h,w=dataset_interp.shape
-batch_generate_size=100
+batch_generate_size=20
 reconstruction_output=np.zeros((num,h,w))
 count_d,count_h,count_w=opt.countd,opt.counth,opt.countw
 pixel_start_d=count_d*batch_generate_size

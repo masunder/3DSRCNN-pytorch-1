@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
 CUDA_VISIBLE_DEVICES=2
 
-ori_path='30x30_2'
+ori_path='images/HR/'
 
-inter_path='30x30_2'
-model_path='model_12layers_25input_3kernel_multi/model_epoch_20.pkl'
+inter_path='images/LR/'
+model_path='model/0809-1245L_model/model_epoch_2.pkl'
 saved_prefix='30x30_'
 format='bmp'
-block_size=100
-reconstrucion_size=400
-count=(reconstruction_size/block_size)-1
+block_size=20
+hei=2580
+wid=2580
+dep=40
 date 
-for ((i=0;i<=3;i++))
+for count_d in range((dep//block_size))
 do
-for ((j=0;j<=3;j++))
+for count_h in range((hei//block_size))
 do
-for ((k=0;k<=3;k++))
+for count_w in range((wid//block_size))
 do
-python generate_subblocks.py --countd $i --counth $j --countw $k --interpath $inter_path --model $model_path  --format $format
+python generate_subblocks.py --countd $count_d --counth $count_h --countw $count_w --interpath $inter_path --model $model_path  --format $format
 done
 done
 done
-python restore_complete_3Dimage.py --oripath $ori_path --interpath $inter_path  --memo $saved_prefix 
+python restore_complete_3Dimage.py --oripath $ori_path --interpath $inter_path  --memo $saved_prefix --block_size $block_size
 date 

@@ -20,7 +20,7 @@ def PSNR(pred, gt):#this function(tested) can be used in 2D or 3D
     if rmse == 0:
         return 100
     return 20 * math.log10(255.0 / rmse)
-    
+
 
 def generate_2Dimage(array_like,save_mode='3D_VDSR_/',image_format='bmp'):
     if not isinstance(array_like,np.ndarray):

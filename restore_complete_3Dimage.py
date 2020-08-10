@@ -21,13 +21,15 @@ parser.add_argument("--oripath", type=str, default='test/testset/test1',help="pa
 parser.add_argument('--interpath',type=str,default='saved_crop_imgs_1_low',help='path to interpolation image ')
 parser.add_argument('--imagesize',type=str,default=400,help='size of reconstructed image')
 parser.add_argument('--block_size',type=int,default=100,help='reconstrucion size per time')
+parser.add_argument("--hei", type=int, default=2580, help="h")
+parser.add_argument("--wid", type=int, default=2580, help="w")
+parser.add_argument("--dep", type=int, default=40, help="d")
 parser.add_argument('--memo',type=str,default='wdd')
 opt=parser.parse_args()
 # print(opt.interpath, opt.oripath)
 #dataset_interp=utils.read_imagecollection('/home/wdd/pytorch-vdsr-3d/testset/x2interp/test1x2')
-num,h,w=(opt.imagesize,opt.imagesize,opt.imagesize)
-batch_generate_size=100
-reconstruction_size=400
+num,h,w=(opt.hei,opt.wid,opt.dep)
+batch_generate_size=opt.block_size
 reconstruction_output=np.zeros((num,h,w))
 default_path='result/3D_VDSR_'#此处注意需要修改
 sub_name=opt.memo
@@ -51,8 +53,7 @@ dataset_interp = utils.read_imagecollection(opt.interpath, image_format='bmp')#�
 #print ('======>Read original image from : ',opt.oripath,' Read low resolution images from : ',opt.interpath)
 #print ('PSNR of interp:',utils.PSNR(dataset_interp[:reconstruction_size,:reconstruction_size,:reconstruction_size],dataset_ori[:reconstruction_size,:reconstruction_size,:reconstruction_size]))
 # print ('PSNR of reconstructor:',utils.PSNR(reconstruction_output,dataset_ori[:reconstruction_size,:reconstruction_size,:reconstruction_size]))
-print (utils.PSNR(reconstruction_output,dataset_ori[:reconstruction_size,:reconstruction_size,:reconstruction_size]))
+print (utils.PSNR(reconstruction_output,dataset_ori[:num,:h,:w]))
 # Image.fromarray(reconstruction_output[..., 100]).show()
 # Image.fromarray(dataset_interp[..., 100]).show()
 utils.generate_2Dimage(save_mode=os.path.join(default_path, sub_name), array_like=reconstruction_output)
-
