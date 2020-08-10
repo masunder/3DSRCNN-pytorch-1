@@ -15,7 +15,6 @@ class DatasetFromHdf5(data.Dataset):
         return torch.from_numpy(self.data[index,:,:,:]).float(), torch.from_numpy(self.target[index,:,:,:]).float()
         
     def __len__(self):
-
         return self.data.shape[0]
     
 

@@ -31,11 +31,10 @@ class Net(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        residual = x
         out = self.relu(self.input(x))
         out = self.residual_layer(out)
         out = self.output(out)
-        out = torch.add(out,residual)
+        out = torch.add(out,x)
         return out
     
 if __name__=='__main__':
